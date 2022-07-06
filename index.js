@@ -97,7 +97,7 @@ async function run() {
   app.get('/singleOrder', checkJwt, async (req, res) => {
     const decodedEmail = req.decoded.email
       const email = req.query.email
-      //console.log(email,'email-got');
+   //   console.log(email,'email-got');
     if (email === decodedEmail) {
         const query = { email: email }
     const cursor = ordersCollection.find(query)
@@ -197,7 +197,24 @@ app.get('/user/:email', checkJwt, async (req, res) => {
 
 
 
+// give discount 
+app.patch('/discount/:email', checkJwt,verifyAdmin ,async (req, res) => {
+    const email = req.params.email
+   // console.log(email, 'email');
+    const giveDiscount = req.body
+    //console.log(giveDiscount);
+    const query = { email: email }
+    const options = { upsert: true };
+    const updateDoc = {
 
+        $set: {
+          discount: giveDiscount.sendDiscount
+        },
+    };
+    const updateOrder = await usersCollection.updateOne(query, updateDoc,options)
+   
+    res.send(updateOrder)
+})
 
         
     }
